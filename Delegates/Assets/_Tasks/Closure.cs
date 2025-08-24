@@ -1,8 +1,8 @@
-using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
+//Для задания 5: А и Б
 namespace _Tasks
 {
     public class Closure : MonoBehaviour
