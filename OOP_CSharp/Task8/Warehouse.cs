@@ -2,18 +2,17 @@
 
 public class Warehouse
 {
-    public List<Component> Components { get; }
+    private Dictionary<ComponentType, int> _components { get; }
     private Random _random;
 
     public Warehouse()
     {
         _random = new Random();
-        int count = _random.Next(20, 41);
-        Components = new List<Component>(count);
+        _components = new Dictionary<ComponentType, int>();
 
-        for (int i = 0; i < count; i++)
+        foreach (var type in Enum.GetValues<ComponentType>())
         {
-            Components.Add(new Component((ComponentType)_random.Next(0, 4)));
+            _components[type] = _random.Next(5, 12);
         }
     }
 
@@ -30,27 +29,16 @@ public class Warehouse
 
     private int CalculateOneDetail(ComponentType type)
     {
-        int temp = 0;
-        foreach (Component component in Components)
-        {
-            if (component.Type == type)
-            {
-                temp++;
-            }
-        }
-
-        return temp;
+        _components.TryGetValue(type, out int count);
+        return count;
     }
 
     public bool UseComponent(ComponentType type)
     {
-        for (int i = Components.Count - 1; i >= 0; i--)
+        if (_components.TryGetValue(type, out int value) && value > 0)
         {
-            if (Components[i].Type == type)
-            {
-                Components.RemoveAt(i);
-                return true;
-            }
+            _components[type] = value - 1;
+            return true;
         }
 
         return false;
