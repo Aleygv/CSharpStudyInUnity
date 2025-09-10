@@ -8,7 +8,7 @@ public class CarService
     public Warehouse Warehouse { get; }
     private int _balance;
     private Random _random;
-    private int _numberOfComponent;
+    public CarProblem CurrentProblem { get; private set; }
 
     public CarService(int balance)
     {
@@ -19,14 +19,16 @@ public class CarService
 
     public void EvaluateCar()
     {
-        Console.WriteLine($"Приехал новый автомобиль, проблема с {FindProblem(ref _numberOfComponent)}");
+        var problem = new CarProblem();
+        Console.WriteLine($"Приехал новый автомобиль, проблема с {problem.ShowProblemText()}");
+        CurrentProblem = problem;
     }
 
     public void FixCar()
     {
-        if (Warehouse.UseComponent((ComponentType)_numberOfComponent))
+        if (Warehouse.UseComponent(CurrentProblem.ProblemType))
         {
-            MakeMoney();
+            AddRepairRevenue();
             Console.WriteLine($"Автомобиль получилось починить, баланс: {_balance}");
         }
         else
@@ -36,7 +38,7 @@ public class CarService
         }
     }
 
-    private void MakeMoney()
+    private void AddRepairRevenue()
     {
         _balance += GAIN_VALUE;
     }
@@ -44,11 +46,5 @@ public class CarService
     private void PayPenalty()
     {
         _balance -= PENALTY_VALUE;
-    }
-
-    private ComponentType FindProblem(ref int number)
-    {
-        number = _random.Next(0, 3);
-        return (ComponentType)number;
     }
 }
