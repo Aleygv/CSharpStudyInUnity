@@ -4,13 +4,9 @@ public class Warehouse
 {
     private Dictionary<ComponentType, int> _components { get; }
 
-    public Warehouse(int brakes, int fuelFilter, int sparkPlugs)
+    public Warehouse(Dictionary<ComponentType, int> components)
     {
-        _components = new Dictionary<ComponentType, int>();
-
-        _components[0] = brakes;
-        _components[(ComponentType)1] = fuelFilter;
-        _components[(ComponentType)2] = sparkPlugs;
+        _components = components;
     }
 
     public void ShowComponents()

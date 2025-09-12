@@ -9,10 +9,10 @@ public class CarService
     public Warehouse Warehouse { get; }
     public CarProblem CurrentProblem { get; private set; }
 
-    public CarService(int balance, int brakes, int fuelFilter, int sparkPlugs)
+    public CarService(int balance, Warehouse warehouse)
     {
         _balance = balance;
-        Warehouse = new Warehouse(brakes, fuelFilter, sparkPlugs);
+        Warehouse = warehouse;
     }
 
     public void EvaluateCar(CarProblem problem)
