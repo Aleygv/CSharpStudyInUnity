@@ -5,21 +5,18 @@ public class CarService
     private const int PENALTY_VALUE = 70;
     private const int GAIN_VALUE = 120;
     
-    public Warehouse Warehouse { get; }
     private int _balance;
-    private Random _random;
+    public Warehouse Warehouse { get; }
     public CarProblem CurrentProblem { get; private set; }
 
-    public CarService(int balance)
+    public CarService(int balance, int brakes, int fuelFilter, int sparkPlugs)
     {
         _balance = balance;
-        Warehouse = new Warehouse();
-        _random = new Random();
+        Warehouse = new Warehouse(brakes, fuelFilter, sparkPlugs);
     }
 
-    public void EvaluateCar()
+    public void EvaluateCar(CarProblem problem)
     {
-        var problem = new CarProblem();
         Console.WriteLine($"Приехал новый автомобиль, проблема с {problem.ShowProblemText()}");
         CurrentProblem = problem;
     }

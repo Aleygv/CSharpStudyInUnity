@@ -3,17 +3,14 @@
 public class Warehouse
 {
     private Dictionary<ComponentType, int> _components { get; }
-    private Random _random;
 
-    public Warehouse()
+    public Warehouse(int brakes, int fuelFilter, int sparkPlugs)
     {
-        _random = new Random();
         _components = new Dictionary<ComponentType, int>();
 
-        foreach (var type in Enum.GetValues<ComponentType>())
-        {
-            _components[type] = _random.Next(5, 12);
-        }
+        _components[0] = brakes;
+        _components[(ComponentType)1] = fuelFilter;
+        _components[(ComponentType)2] = sparkPlugs;
     }
 
     public void ShowComponents()
