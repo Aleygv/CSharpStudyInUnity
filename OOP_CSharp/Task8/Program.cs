@@ -6,11 +6,12 @@ public class Programm
     {
         bool _isWorking = true;
         
-        CarService carService = new CarService(1000);
+        CarService carService = new CarService(1000, 10, 4, 9);
 
         while (_isWorking)
         {
-            carService.EvaluateCar();
+            CarProblem problem = new CarProblem();
+            carService.EvaluateCar(problem);
             Console.WriteLine();
             
             Console.WriteLine($"Выберете действие:\n" +
