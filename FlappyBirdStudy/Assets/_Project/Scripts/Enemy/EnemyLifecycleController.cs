@@ -1,17 +1,17 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemySpawner : MonoBehaviour
+public class EnemyLifecycleController : MonoBehaviour
 {
     [SerializeField] private List<Transform> _spawnPoints;
     [SerializeField] private float _spawnRate = 3f;
 
-    private DelObjectPool<Enemy> _enemyPool;
+    private ObjectPool<Enemy> _enemyPool;
     private System.Random _random;
     private float _spawnTimer;
-    private DelObjectPool<Bullet> _enemyBulletPool;
+    private ObjectPool<Bullet> _enemyBulletPool;
 
-    public void Init(DelObjectPool<Enemy> pool, DelObjectPool<Bullet> bulletPool, System.Random random)
+    public void Init(ObjectPool<Enemy> pool, ObjectPool<Bullet> bulletPool, System.Random random)
     {
         _enemyPool = pool;
         _enemyBulletPool = bulletPool;
@@ -35,7 +35,8 @@ public class EnemySpawner : MonoBehaviour
         Transform spawnPoint = _spawnPoints[randomIndex];
         
         Enemy enemy = _enemyPool.GetItem();
-        enemy.Init(ReturnEnemyToPool, _enemyBulletPool);
+        enemy.Init(_enemyBulletPool);
+        enemy.OnDied += ReturnEnemyToPool;
         enemy.transform.position = spawnPoint.position;
     }
 

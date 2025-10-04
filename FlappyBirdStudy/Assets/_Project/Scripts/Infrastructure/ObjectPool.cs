@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-public class DelObjectPool<T>
+public class ObjectPool<T>
 {
     private Stack<T> _pool;
     private Action<T> _activateItem;
@@ -9,11 +9,11 @@ public class DelObjectPool<T>
     private Action<T> _destroy;
     private Func<T> _createItem;
 
-    public int CountAll { get; private set; }
-    public int CountInactive => _pool.Count;
-    public int CountActive => CountAll - CountInactive;
+    public int AllCount { get; private set; }
+    public int InactiveCount => _pool.Count;
+    public int ActiveCount => AllCount - InactiveCount;
 
-    public DelObjectPool(
+    public ObjectPool(
         Action<T> activateItem,
         Action<T> deactivateItem,
         Action<T> destroy,
@@ -37,7 +37,7 @@ public class DelObjectPool<T>
         else
         {
             item = _createItem();
-            CountAll++;
+            AllCount++;
         }
 
         _activateItem(item);
@@ -66,6 +66,6 @@ public class DelObjectPool<T>
             _deactivateItem(item);
             _pool.Push(item);
         }
-        CountAll += count;
+        AllCount += count;
     }
 }

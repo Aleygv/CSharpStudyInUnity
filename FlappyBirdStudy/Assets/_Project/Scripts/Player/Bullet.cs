@@ -4,21 +4,19 @@ using UnityEngine.Serialization;
 
 public class Bullet : MonoBehaviour
 {
-    private const float LIFE_TIME = 2;
-
+    [SerializeField] private float _lifeTime = 2;
     [SerializeField] private CharacterTags _tag;
     [SerializeField] private Rigidbody2D _rigidbody;
     
     private float _lifeTimer;
     private float _speed;
     private Vector2 _direction;
-    private Action<Bullet> _onReturnToPool;
+    public Action<Bullet> OnHit;
 
-    public void Init(float speed, Vector2 direction, Action<Bullet> onReturnToPool)
+    public void Init(float speed, Vector2 direction)
     {
         _speed = speed;
         _direction = direction;
-        _onReturnToPool = onReturnToPool;
         _lifeTimer = 0f;
         gameObject.SetActive(true);
     }
@@ -26,13 +24,16 @@ public class Bullet : MonoBehaviour
     private void Update()
     {
         _lifeTimer += Time.deltaTime;
-
-        _rigidbody.linearVelocity = _direction * _speed;
         
-        if (_lifeTimer >= LIFE_TIME)
+        if (_lifeTimer >= _lifeTime)
         {
             ReturnToPool();
         }
+    }
+
+    private void FixedUpdate()
+    {
+        _rigidbody.linearVelocity = _direction * _speed;
     }
 
     private void OnCollisionEnter2D(Collision2D other)
@@ -46,8 +47,7 @@ public class Bullet : MonoBehaviour
 
     private void ReturnToPool()
     {
-        _onReturnToPool?.Invoke(this);
-        gameObject.SetActive(false); //Возможно тут прикол
+        OnHit?.Invoke(this);
     }
 }
 
