@@ -1,32 +1,24 @@
 using System;
 using UnityEngine;
 
-public class PlayerShooter : MonoBehaviour
+public class PlayerShooter : Shooter
 {
-    private static readonly Vector2 DIRECTION = Vector2.right;
-
     [SerializeField] private InputService _inputService;
-    [SerializeField] private Transform _bulletPlace;
-    [SerializeField] private float _bulletSpeed;
-    [SerializeField] private float _fireRate;
     [SerializeField] private UI_ReloadTime _uiReloadTime;
 
-    private DelObjectPool<Bullet> _pool;
-    private float _fireTimer;
-
-    public void Init(DelObjectPool<Bullet> pool)
+    public override void Init(ObjectPool<Bullet> pool)
     {
         _pool = pool;
     }
 
     private void OnEnable()
     {
-        _inputService.Shoot += OnShoot;
+        _inputService.Shoot += OnShootInput;
     }
 
     private void OnDisable()
     {
-        _inputService.Shoot -= OnShoot;
+        _inputService.Shoot -= OnShootInput;
     }
 
     private void Update()
@@ -34,20 +26,13 @@ public class PlayerShooter : MonoBehaviour
         _uiReloadTime.ChangeBarValue(_fireTimer);
         _fireTimer += Time.deltaTime;
     }
-
-    private void OnShoot()
+    
+    private void OnShootInput()
     {
         if (_fireTimer >= _fireRate)
         {
-            Bullet item = _pool.GetItem();
-            item.Init(_bulletSpeed, DIRECTION, ReturnBulletToPool);
-            item.transform.position = _bulletPlace.position;
+            Shoot();
             _fireTimer = 0f;
         }
-    }
-
-    private void ReturnBulletToPool(Bullet bullet)
-    {
-        _pool.ReleaseItem(bullet);
     }
 }

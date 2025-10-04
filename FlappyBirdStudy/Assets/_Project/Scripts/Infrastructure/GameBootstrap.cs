@@ -1,14 +1,15 @@
 using System;
 using UnityEngine;
+using UnityEngine.Serialization;
 using Random = System.Random;
 
 public class GameBootstrap : MonoBehaviour
 {
     [SerializeField] private Player _player;
 
-    private DelObjectPool<Bullet> _playerBulletPool;
-    private DelObjectPool<Bullet> _enemyBulletPool;
-    private DelObjectPool<Enemy> _enemyPool;
+    private ObjectPool<Bullet> _playerBulletPool;
+    private ObjectPool<Bullet> _enemyBulletPool;
+    private ObjectPool<Enemy> _enemyPool;
     private Random _random;
 
     [SerializeField] private PlayerShooter _playerShooter;
@@ -16,23 +17,20 @@ public class GameBootstrap : MonoBehaviour
 
     [SerializeField] private Bullet _enemyBullet;
 
-    [SerializeField] private EnemySpawner _enemySpawner;
+    [FormerlySerializedAs("_enemySpawner")] [SerializeField] private EnemyLifecycleController _enemyLifecycleController;
     [SerializeField] private Enemy _enemyPrefab;
 
     private void Awake()
     {
         _random = new Random();
         
-        _playerBulletPool = new DelObjectPool<Bullet>((bullet => bullet.gameObject.SetActive(true)),
-            bullet => bullet.gameObject.SetActive(false), bullet => Destroy(bullet), () => Instantiate(_playerBullet));
+        _playerBulletPool = new ObjectPool<Bullet>(Activate, Deactivate, Destroy, () => Instantiate(_playerBullet));
         _playerBulletPool.PreWarm(5);
 
-        _enemyBulletPool = new DelObjectPool<Bullet>((bullet => bullet.gameObject.SetActive(true)),
-            bullet => bullet.gameObject.SetActive(false), bullet => Destroy(bullet), () => Instantiate(_enemyBullet));
+        _enemyBulletPool = new ObjectPool<Bullet>(Activate, Deactivate, Destroy, () => Instantiate(_enemyBullet));
         _enemyBulletPool.PreWarm(10);
         
-        _enemyPool = new DelObjectPool<Enemy>((enemy => enemy.gameObject.SetActive(true)),
-            enemy => enemy.gameObject.SetActive(false), enemy => Destroy(enemy), () => Instantiate(_enemyPrefab));
+        _enemyPool = new ObjectPool<Enemy>(Activate, Deactivate, Destroy, () => Instantiate(_enemyPrefab));
         _enemyPool.PreWarm(10);
 
         _player.OnPlayerDied += OnPlayerDied;
@@ -41,7 +39,7 @@ public class GameBootstrap : MonoBehaviour
     private void Start()
     {
         _playerShooter.Init(_playerBulletPool);
-        _enemySpawner.Init(_enemyPool, _enemyBulletPool, _random);
+        _enemyLifecycleController.Init(_enemyPool, _enemyBulletPool, _random);
     }
 
     private void OnPlayerDied()
@@ -54,4 +52,9 @@ public class GameBootstrap : MonoBehaviour
         if (_player != null)
             _player.OnPlayerDied -= OnPlayerDied;
     }
+    
+    private void Activate(Component component) => component.gameObject.SetActive(true);
+    private void Deactivate(Component component) => component.gameObject.SetActive(false);
+    private void Destroy(Component component) => Destroy(component.gameObject);
+
 }

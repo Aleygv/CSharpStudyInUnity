@@ -193,6 +193,7 @@ MonoBehaviour:
   _bulletPlace: {fileID: 8901428435897179842}
   _bulletSpeed: 10
   _fireRate: 3
+  DIRECTION: {x: -1, y: 0}
 --- !u!1 &8147327710532501218
 GameObject:
   m_ObjectHideFlags: 0
