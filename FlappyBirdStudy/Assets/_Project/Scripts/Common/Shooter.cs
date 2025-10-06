@@ -7,22 +7,25 @@ public abstract class Shooter : MonoBehaviour
     [SerializeField] protected float _fireRate;
     [SerializeField] protected Vector2 DIRECTION;
 
-    protected ObjectPool<Bullet> _pool;
-    protected float _fireTimer;
-    
-    public abstract void Init(ObjectPool<Bullet> pool);
+    protected ObjectPool<Bullet> Pool;
+    protected float FireTimer;
+
+    public void Init(ObjectPool<Bullet> pool)
+    {
+        Pool = pool;
+    }
 
     protected void Shoot()
     {
-        Bullet item = _pool.GetItem();
+        Bullet item = Pool.GetItem();
         item.Init(_bulletSpeed, DIRECTION);
         item.OnHit += ReturnBulletToPool;
         item.transform.position = _bulletPlace.position;
-        _fireTimer = 0f;
+        FireTimer = 0f;
     }
     
     private void ReturnBulletToPool(Bullet bullet)
     {
-        _pool.ReleaseItem(bullet);
+        Pool.ReleaseItem(bullet);
     }
 }

@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class UI_ReloadTime : MonoBehaviour
+public class ReloadTimeView : MonoBehaviour
 {
     [SerializeField] private Image _reloadImage;
 
