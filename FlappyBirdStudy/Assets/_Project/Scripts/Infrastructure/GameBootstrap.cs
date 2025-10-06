@@ -20,6 +20,8 @@ public class GameBootstrap : MonoBehaviour
     [FormerlySerializedAs("_enemySpawner")] [SerializeField] private EnemyLifecycleController _enemyLifecycleController;
     [SerializeField] private Enemy _enemyPrefab;
 
+    [SerializeField] private ScoreController _scoreController;
+
     private void Awake()
     {
         _random = new Random();
@@ -39,7 +41,7 @@ public class GameBootstrap : MonoBehaviour
     private void Start()
     {
         _playerShooter.Init(_playerBulletPool);
-        _enemyLifecycleController.Init(_enemyPool, _enemyBulletPool, _random);
+        _enemyLifecycleController.Init(_enemyPool, _enemyBulletPool, _random, _scoreController);
     }
 
     private void OnPlayerDied()

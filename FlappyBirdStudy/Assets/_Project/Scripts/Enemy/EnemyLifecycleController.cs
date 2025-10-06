@@ -10,12 +10,14 @@ public class EnemyLifecycleController : MonoBehaviour
     private System.Random _random;
     private float _spawnTimer;
     private ObjectPool<Bullet> _enemyBulletPool;
+    private ScoreController _scoreController;
 
-    public void Init(ObjectPool<Enemy> pool, ObjectPool<Bullet> bulletPool, System.Random random)
+    public void Init(ObjectPool<Enemy> pool, ObjectPool<Bullet> bulletPool, System.Random random, ScoreController scoreController)
     {
         _enemyPool = pool;
         _enemyBulletPool = bulletPool;
         _random = random;
+        _scoreController = scoreController;
     }
 
     private void Update()
@@ -42,6 +44,10 @@ public class EnemyLifecycleController : MonoBehaviour
 
     private void ReturnEnemyToPool(Enemy enemy)
     {
+        // Нейронка указала, что можно одписываться, возможно так и надо
+        enemy.OnDied -= ReturnEnemyToPool;
+
         _enemyPool.ReleaseItem(enemy);
+        _scoreController.AddPoints(1);
     }
 }

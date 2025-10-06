@@ -1,15 +1,11 @@
 using System;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class PlayerShooter : Shooter
 {
     [SerializeField] private InputService _inputService;
-    [SerializeField] private UI_ReloadTime _uiReloadTime;
-
-    public override void Init(ObjectPool<Bullet> pool)
-    {
-        _pool = pool;
-    }
+    [SerializeField] private ReloadTimeView _reloadTimeView;
 
     private void OnEnable()
     {
@@ -23,16 +19,16 @@ public class PlayerShooter : Shooter
 
     private void Update()
     {
-        _uiReloadTime.ChangeBarValue(_fireTimer);
-        _fireTimer += Time.deltaTime;
+        _reloadTimeView.ChangeBarValue(FireTimer);
+        FireTimer += Time.deltaTime;
     }
-    
+
     private void OnShootInput()
     {
-        if (_fireTimer >= _fireRate)
+        if (FireTimer >= _fireRate)
         {
             Shoot();
-            _fireTimer = 0f;
+            FireTimer = 0f;
         }
     }
 }

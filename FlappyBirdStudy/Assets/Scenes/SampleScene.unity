@@ -254,8 +254,9 @@ MonoBehaviour:
   _playerShooter: {fileID: 1994240484}
   _playerBullet: {fileID: 4211591645565287286, guid: ddf25c93261f9284690877e07ef2f477, type: 3}
   _enemyBullet: {fileID: 8110391904684526538, guid: a976b6f2ee098f74fac1061c3a9c736d, type: 3}
-  _enemySpawner: {fileID: 380747181}
+  _enemyLifecycleController: {fileID: 380747181}
   _enemyPrefab: {fileID: 245272068329028903, guid: 88710354d5ffe9d40b8fd8a25fe6d549, type: 3}
+  _scoreController: {fileID: 1416088703}
 --- !u!4 &265553102
 Transform:
   m_ObjectHideFlags: 0
@@ -696,6 +697,7 @@ GameObject:
   - component: {fileID: 1416088701}
   - component: {fileID: 1416088700}
   - component: {fileID: 1416088702}
+  - component: {fileID: 1416088703}
   m_Layer: 5
   m_Name: ScoreText
   m_TagString: Untagged
@@ -834,6 +836,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _scoreText: {fileID: 1416088700}
+--- !u!114 &1416088703
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1416088698}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e7be309145ad5d349b13678ebe840d12, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _scoreView: {fileID: 1416088702}
 --- !u!1 &1501923412
 GameObject:
   m_ObjectHideFlags: 0
@@ -1280,11 +1295,19 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1122599154}
     - target: {fileID: 4060585450499897380, guid: b573b95e4da6fe84d918cb050588e0ae, type: 3}
+      propertyPath: DIRECTION.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4060585450499897380, guid: b573b95e4da6fe84d918cb050588e0ae, type: 3}
       propertyPath: _inputService
       value: 
       objectReference: {fileID: 1122599154}
     - target: {fileID: 4060585450499897380, guid: b573b95e4da6fe84d918cb050588e0ae, type: 3}
       propertyPath: _uiReloadTime
+      value: 
+      objectReference: {fileID: 1907585090}
+    - target: {fileID: 4060585450499897380, guid: b573b95e4da6fe84d918cb050588e0ae, type: 3}
+      propertyPath: _reloadTimeView
       value: 
       objectReference: {fileID: 1907585090}
     - target: {fileID: 7875029788515117819, guid: b573b95e4da6fe84d918cb050588e0ae, type: 3}
