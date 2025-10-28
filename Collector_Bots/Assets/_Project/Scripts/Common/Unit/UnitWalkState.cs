@@ -22,7 +22,7 @@ public abstract class UnitWalkState : IUnitState
 
     public virtual void Update()
     {
-        if (!_hasReachedTarget && _unit._navigator.HasReachedTarget())
+        if (!_hasReachedTarget && _unit.Navigator.HasReachedTarget())
         {
             _hasReachedTarget = true;
             OnReachedTarget();

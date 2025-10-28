@@ -10,13 +10,21 @@ public class Unit : MonoBehaviour
     private IUnitState _currentState;
     private bool _isBusy = false;
 
+    [SerializeField] private PathNavigator _navigator;
+    public PathNavigator Navigator => _navigator;
     public bool IsBusy => _isBusy;
-    [SerializeField] public PathNavigator _navigator;
-    public event Action<Unit, Resource> OnResourceDelivered;
     
-    public void Init()
+    public IUnitState IdleState { get; private set; }
+    private IUnitState GetResourceState { get; set; }
+    public IUnitState ReturnState { get; private set; }
+    public event Action<Resource> OnResourceDelivered;
+    
+    public void Init(IUnitState idleState, IUnitState getResourceState, IUnitState returnState)
     {
-        _currentState = new UnitIdleState(this);
+        IdleState = idleState;
+        GetResourceState = getResourceState;
+        ReturnState = returnState;
+        _currentState = IdleState;
     }
 
     public void Update()
@@ -24,7 +32,7 @@ public class Unit : MonoBehaviour
         _currentState?.Update();
     }
 
-    internal void SetTarget(Vector3 target)
+    public void SetTarget(Vector3 target)
     {
         _navigator.SetTarget(target);
     }
@@ -39,33 +47,33 @@ public class Unit : MonoBehaviour
     public void GetResource(Resource resource)
     {
         _targetResource = resource;
-        SetState(new GetResourceState(this));
+        SetState(GetResourceState);
     }
 
-    internal void MarkAsBusy(bool busy)
+    public void MarkAsBusy(bool busy)
     {
         _isBusy = busy;
     }
     
-    internal Resource GetTargetResource()
+    public Resource GetTargetResource()
     {
         return _targetResource;
     }
 
-    internal void CarryResource(Resource resource)
+    public void CarryResource(Resource resource)
     {
         resource.gameObject.transform.position = _resourceCarryingPoint.position;
         //resource.transform.SetParent(_resourceCarryingPoint, worldPositionStays: true);
     }
 
-    internal Vector3 GetBasePosition()
+    public Vector3 GetBasePosition()
     {
         return _baseTransform.position;
     }
     
-    internal void DeliveredResource()
+    public void DeliveredResource()
     {
-        OnResourceDelivered?.Invoke(this, _targetResource);
+        OnResourceDelivered?.Invoke(_targetResource);
         _targetResource = null; // важный шаг! (по крайней мере так нейронка сказала)
     }
 }

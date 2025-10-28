@@ -18,7 +18,7 @@ public class GetResourceState : UnitWalkState
         else
         {
             // Ресурс исчез — возвращаемся в idle
-            _unit.SetState(new UnitIdleState(_unit));
+            _unit.SetState(_unit.IdleState);
         }
     }
 
@@ -29,11 +29,11 @@ public class GetResourceState : UnitWalkState
         {
             // _unit.GetResource(resource);
             _unit.CarryResource(resource);
-            _unit.SetState(new ReturnToBaseState(_unit));
+            _unit.SetState(_unit.ReturnState);
         }
         else
         {
-            _unit.SetState(new UnitIdleState(_unit));
+            _unit.SetState(_unit.IdleState);
         }
     }
 }

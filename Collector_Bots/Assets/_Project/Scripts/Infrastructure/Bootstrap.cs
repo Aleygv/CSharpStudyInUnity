@@ -15,6 +15,7 @@ public class Bootstrap : MonoBehaviour
     // private List<Unit> _units;
     private Random _random;
     private ObjectPool<Resource> _resources;
+    private ResourceDeliveryHandler _deliveryHandler;
 
     private void Awake()
     {
@@ -27,6 +28,9 @@ public class Bootstrap : MonoBehaviour
         _resourceLifecycle.Init(_random, _resources, _scoreController);
         _scanner.Init(_resourceLifecycle);
         _base.Init(_resourceLifecycle, _factory, _scanner);
+
+        _deliveryHandler = new ResourceDeliveryHandler();
+        _deliveryHandler.Init(_base, _resourceLifecycle);
     }
 
     private void Activate(Resource resource)

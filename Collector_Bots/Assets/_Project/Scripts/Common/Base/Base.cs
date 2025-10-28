@@ -15,6 +15,8 @@ public class Base : MonoBehaviour
     private ResourceLifecycle _resourceLifecycle;
     private ResourceScanner _scanner;
     private float _currentTime;
+
+    public event Action<Resource> OnResourceDelivered; 
     
     public void Init(ResourceLifecycle resourceLifecycle, UnitFactory factory, ResourceScanner scanner)
     {
@@ -62,10 +64,9 @@ public class Base : MonoBehaviour
         }
     }
 
-    private void HandleResourceDelivered(Unit unit, Resource resource)
+    private void HandleResourceDelivered(Resource resource)
     {
-        resource.IsReserved = false; // ← освобождаем
-        _resourceLifecycle.ReturnResourceToPool(resource);
+        OnResourceDelivered?.Invoke(resource);
         AssignTask();
     }
 }

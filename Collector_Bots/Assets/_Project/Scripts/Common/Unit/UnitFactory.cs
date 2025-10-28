@@ -7,7 +7,7 @@ public class UnitFactory : MonoBehaviour
     public Unit FactoryMethod()
     {
         var unit = GameObject.Instantiate(_unitPrefab);
-        unit.Init();
+        unit.Init(new UnitIdleState(unit), new GetResourceState(unit), new ReturnToBaseState(unit));
         return unit;
     }
 }
