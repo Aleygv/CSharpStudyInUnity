@@ -24,6 +24,6 @@ public class ReturnToBaseState : UnitWalkState
     protected override void OnReachedTarget()
     {
         _unit.DeliveredResource();
-        _unit.SetState(new UnitIdleState(_unit));
+        _unit.SetState(_unit.IdleState);
     }
 }
