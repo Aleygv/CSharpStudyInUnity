@@ -2,7 +2,7 @@ using UnityEngine;
 
 public interface IUnitState
 {
-    void Enter();
-    void Exit();
-    void Update();
+    void Enter(Unit unit);
+    void Exit(Unit unit);
+    void Update(Unit unit);
 }

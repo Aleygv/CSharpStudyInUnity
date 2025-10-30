@@ -2,28 +2,29 @@ using UnityEngine;
 
 public class ReturnToBaseState : UnitWalkState
 {
-    public ReturnToBaseState(Unit unit) : base(unit)
+    public ReturnToBaseState()
     {
     }
 
-    public override void Enter()
+    public override void Enter(Unit unit)
     {
-        base.Enter();
-        _unit.SetTarget(_unit.GetBasePosition());
+        base.Enter(unit);
+        unit.SetTarget(unit.GetBasePosition());
     }
 
-    public override void Update()
+    public override void Update(Unit unit)
     {
-        base.Update();
-        if (_unit.GetTargetResource() != null)
+        base.Update(unit);
+        if (unit.GetTargetResource() != null)
         {
-            _unit.CarryResource(_unit.GetTargetResource());
+            unit.CarryResource(unit.GetTargetResource());
         }
     }
 
-    protected override void OnReachedTarget()
+    protected override void OnReachedTarget(Unit unit)
     {
-        _unit.DeliveredResource();
-        _unit.SetState(_unit.IdleState);
+        unit.DeliveredResource();
+        // _unit.SetState(_unit.IdleState);
+        unit.EnterState<UnitIdleState>();
     }
 }
