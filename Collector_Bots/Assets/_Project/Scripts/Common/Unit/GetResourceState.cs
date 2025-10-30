@@ -2,38 +2,41 @@ using UnityEngine;
 
 public class GetResourceState : UnitWalkState
 {
-    public GetResourceState(Unit unit) : base(unit)
+    public GetResourceState()
     {
     }
 
-    public override void Enter()
+    public override void Enter(Unit unit)
     {
-        base.Enter();
-        _unit.MarkAsBusy(true);
-        Resource resource = _unit.GetTargetResource();
+        base.Enter(unit);
+        unit.MarkAsBusy(true);
+        Resource resource = unit.GetTargetResource();
         if (resource != null)
         {
-            _unit.SetTarget(resource.transform.position);
+            unit.SetTarget(resource.transform.position);
         }
         else
         {
             // Ресурс исчез — возвращаемся в idle
-            _unit.SetState(_unit.IdleState);
+            // _unit.SetState(_unit.IdleState);
+            unit.EnterState<UnitIdleState>();
         }
     }
 
-    protected override void OnReachedTarget()
+    protected override void OnReachedTarget(Unit unit)
     {
-        Resource resource = _unit.GetTargetResource();
+        Resource resource = unit.GetTargetResource();
         if (resource != null)
         {
             // _unit.GetResource(resource);
-            _unit.CarryResource(resource);
-            _unit.SetState(_unit.ReturnState);
+            unit.CarryResource(resource);
+            // _unit.SetState(_unit.ReturnState);
+            unit.EnterState<ReturnToBaseState>();
         }
         else
         {
-            _unit.SetState(_unit.IdleState);
+            // _unit.SetState(_unit.IdleState);
+            unit.EnterState<UnitIdleState>();
         }
     }
 }

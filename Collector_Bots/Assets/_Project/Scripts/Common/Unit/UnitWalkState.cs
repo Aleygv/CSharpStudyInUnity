@@ -2,32 +2,30 @@ using UnityEngine;
 
 public abstract class UnitWalkState : IUnitState
 {
-    protected readonly Unit _unit;
     protected bool _hasReachedTarget = false;
 
-    public UnitWalkState(Unit unit)
+    public UnitWalkState()
     {
-        _unit = unit;
     }
 
-    public virtual void Enter()
+    public virtual void Enter(Unit unit)
     {
         _hasReachedTarget = false;
     }
 
-    public virtual void Exit()
+    public virtual void Exit(Unit unit)
     {
-        _unit.SetTarget(_unit.GetBasePosition());
+        unit.SetTarget(unit.GetBasePosition());
     }
 
-    public virtual void Update()
+    public virtual void Update(Unit unit)
     {
-        if (!_hasReachedTarget && _unit.Navigator.HasReachedTarget())
+        if (!_hasReachedTarget && unit.Navigator.HasReachedTarget())
         {
             _hasReachedTarget = true;
-            OnReachedTarget();
+            OnReachedTarget(unit);
         }
     }
 
-    protected abstract void OnReachedTarget();
+    protected abstract void OnReachedTarget(Unit unit);
 }

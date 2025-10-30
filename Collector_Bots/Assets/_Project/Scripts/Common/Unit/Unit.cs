@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Unit : MonoBehaviour
@@ -9,27 +10,29 @@ public class Unit : MonoBehaviour
     private Resource _targetResource;
     private IUnitState _currentState;
     private bool _isBusy = false;
+    private Dictionary<Type, IUnitState> _states;
 
     [SerializeField] private PathNavigator _navigator;
     public PathNavigator Navigator => _navigator;
     public bool IsBusy => _isBusy;
     
-    public IUnitState IdleState { get; private set; }
-    private IUnitState GetResourceState { get; set; }
-    public IUnitState ReturnState { get; private set; }
+    public UnitIdleState IdleState { get; private set; }
+    private GetResourceState GetResourceState { get; set; }
+    public ReturnToBaseState ReturnState { get; private set; }
     public event Action<Resource> OnResourceDelivered;
     
-    public void Init(IUnitState idleState, IUnitState getResourceState, IUnitState returnState)
+    public void Init(Dictionary<Type, IUnitState> states)
     {
-        IdleState = idleState;
-        GetResourceState = getResourceState;
-        ReturnState = returnState;
+        _states = states;
+        IdleState = (UnitIdleState)_states[typeof(UnitIdleState)];
+        GetResourceState = (GetResourceState)_states[typeof(GetResourceState)];
+        ReturnState = (ReturnToBaseState)_states[typeof(ReturnToBaseState)];
         _currentState = IdleState;
     }
 
     public void Update()
     {
-        _currentState?.Update();
+        _currentState?.Update(this);
     }
 
     public void SetTarget(Vector3 target)
@@ -37,17 +40,25 @@ public class Unit : MonoBehaviour
         _navigator.SetTarget(target);
     }
 
+    public void EnterState<T>() where T : IUnitState
+    {
+        _currentState?.Exit(this);
+        _currentState = _states[typeof(T)];
+        _currentState?.Enter(this);
+    }
+
     public void SetState(IUnitState newState)
     {
-        _currentState?.Exit();
+        _currentState?.Exit(this);
         _currentState = newState;
-        _currentState?.Enter();
+        _currentState?.Enter(this);
     }
     
     public void GetResource(Resource resource)
     {
         _targetResource = resource;
-        SetState(GetResourceState);
+        // SetState(GetResourceState);
+        EnterState<GetResourceState>();
     }
 
     public void MarkAsBusy(bool busy)
