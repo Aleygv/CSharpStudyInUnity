@@ -12,16 +12,16 @@ public class UnitFactory : MonoBehaviour
     {
         return new Dictionary<Type, IUnitState>()
             {
-                {typeof(UnitIdleState), new UnitIdleState()},
-                {typeof(GetResourceState), new GetResourceState()},
-                {typeof(ReturnToBaseState), new ReturnToBaseState()}
+                {typeof(UnitIdleState), new UnitIdleState(_unitPrefab)},
+                {typeof(GetResourceState), new GetResourceState(_unitPrefab)},
+                {typeof(ReturnToBaseState), new ReturnToBaseState(_unitPrefab)}
             };
     }
     
     public Unit FactoryMethod()
     {
         var unit = GameObject.Instantiate(_unitPrefab);
-        unit.Init(CreateStates());
+        unit.Init();
         return unit;
     }
 }

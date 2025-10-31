@@ -16,23 +16,23 @@ public class Unit : MonoBehaviour
     public PathNavigator Navigator => _navigator;
     public bool IsBusy => _isBusy;
     
-    public UnitIdleState IdleState { get; private set; }
-    private GetResourceState GetResourceState { get; set; }
-    public ReturnToBaseState ReturnState { get; private set; }
+    // public UnitIdleState IdleState { get; private set; }
+    // private GetResourceState GetResourceState { get; set; }
+    // public ReturnToBaseState ReturnState { get; private set; }
     public event Action<Resource> OnResourceDelivered;
     
-    public void Init(Dictionary<Type, IUnitState> states)
+    public void Init()
     {
-        _states = states;
-        IdleState = (UnitIdleState)_states[typeof(UnitIdleState)];
-        GetResourceState = (GetResourceState)_states[typeof(GetResourceState)];
-        ReturnState = (ReturnToBaseState)_states[typeof(ReturnToBaseState)];
-        _currentState = IdleState;
+        _states = new Dictionary<Type, IUnitState>();
+        _states.Add(typeof(UnitIdleState), new UnitIdleState(this));
+        _states.Add(typeof(GetResourceState), new GetResourceState(this));
+        _states.Add(typeof(ReturnToBaseState), new ReturnToBaseState(this));
+        _currentState = _states[typeof(UnitIdleState)];
     }
 
     public void Update()
     {
-        _currentState?.Update(this);
+        _currentState?.Update();
     }
 
     public void SetTarget(Vector3 target)
@@ -42,17 +42,17 @@ public class Unit : MonoBehaviour
 
     public void EnterState<T>() where T : IUnitState
     {
-        _currentState?.Exit(this);
+        _currentState?.Exit();
         _currentState = _states[typeof(T)];
-        _currentState?.Enter(this);
+        _currentState?.Enter();
     }
 
-    public void SetState(IUnitState newState)
-    {
-        _currentState?.Exit(this);
-        _currentState = newState;
-        _currentState?.Enter(this);
-    }
+    // public void SetState(IUnitState newState)
+    // {
+    //     _currentState?.Exit();
+    //     _currentState = newState;
+    //     _currentState?.Enter();
+    // }
     
     public void GetResource(Resource resource)
     {
