@@ -4,20 +4,21 @@ public class UnitIdleState : IUnitState
 {
     private readonly Unit _unit;
 
-    public UnitIdleState()
+    public UnitIdleState(Unit unit)
     {
+        _unit = unit;
     }
-    public void Enter(Unit unit)
+    public void Enter()
     {
-        unit.MarkAsBusy(false);
-        unit.SetTarget(unit.GetBasePosition());
-    }
-
-    public void Exit(Unit unit)
-    {
+        _unit.MarkAsBusy(false);
+        _unit.SetTarget(_unit.GetBasePosition());
     }
 
-    public void Update(Unit unit)
+    public void Exit()
+    {
+    }
+
+    public void Update()
     {
         
     }

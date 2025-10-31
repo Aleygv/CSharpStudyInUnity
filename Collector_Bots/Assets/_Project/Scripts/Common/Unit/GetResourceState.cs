@@ -2,41 +2,43 @@ using UnityEngine;
 
 public class GetResourceState : UnitWalkState
 {
-    public GetResourceState()
+    // private Unit _unit;
+
+    public GetResourceState(Unit unit) : base(unit)
     {
     }
 
-    public override void Enter(Unit unit)
+    public override void Enter()
     {
-        base.Enter(unit);
-        unit.MarkAsBusy(true);
-        Resource resource = unit.GetTargetResource();
+        base.Enter();
+        _unit.MarkAsBusy(true);
+        Resource resource = _unit.GetTargetResource();
         if (resource != null)
         {
-            unit.SetTarget(resource.transform.position);
+            _unit.SetTarget(resource.transform.position);
         }
         else
         {
             // Ресурс исчез — возвращаемся в idle
-            // _unit.SetState(_unit.IdleState);
-            unit.EnterState<UnitIdleState>();
+            // __unit.SetState(__unit.IdleState);
+            _unit.EnterState<UnitIdleState>();
         }
     }
 
-    protected override void OnReachedTarget(Unit unit)
+    protected override void OnReachedTarget()
     {
-        Resource resource = unit.GetTargetResource();
+        Resource resource = _unit.GetTargetResource();
         if (resource != null)
         {
-            // _unit.GetResource(resource);
-            unit.CarryResource(resource);
-            // _unit.SetState(_unit.ReturnState);
-            unit.EnterState<ReturnToBaseState>();
+            // __unit.GetResource(resource);
+            _unit.CarryResource(resource);
+            // __unit.SetState(__unit.ReturnState);
+            _unit.EnterState<ReturnToBaseState>();
         }
         else
         {
-            // _unit.SetState(_unit.IdleState);
-            unit.EnterState<UnitIdleState>();
+            // __unit.SetState(__unit.IdleState);
+            _unit.EnterState<UnitIdleState>();
         }
     }
 }
