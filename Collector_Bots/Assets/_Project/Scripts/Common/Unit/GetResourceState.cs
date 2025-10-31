@@ -11,34 +11,34 @@ public class GetResourceState : UnitWalkState
     public override void Enter()
     {
         base.Enter();
-        _unit.MarkAsBusy(true);
-        Resource resource = _unit.GetTargetResource();
+        Unit.MarkAsBusy(true);
+        Resource resource = Unit.GetTargetResource();
         if (resource != null)
         {
-            _unit.SetTarget(resource.transform.position);
+            Unit.SetTarget(resource.transform.position);
         }
         else
         {
             // Ресурс исчез — возвращаемся в idle
             // __unit.SetState(__unit.IdleState);
-            _unit.EnterState<UnitIdleState>();
+            Unit.EnterState<UnitIdleState>();
         }
     }
 
     protected override void OnReachedTarget()
     {
-        Resource resource = _unit.GetTargetResource();
+        Resource resource = Unit.GetTargetResource();
         if (resource != null)
         {
             // __unit.GetResource(resource);
-            _unit.CarryResource(resource);
+            Unit.CarryResource(resource);
             // __unit.SetState(__unit.ReturnState);
-            _unit.EnterState<ReturnToBaseState>();
+            Unit.EnterState<ReturnToBaseState>();
         }
         else
         {
             // __unit.SetState(__unit.IdleState);
-            _unit.EnterState<UnitIdleState>();
+            Unit.EnterState<UnitIdleState>();
         }
     }
 }

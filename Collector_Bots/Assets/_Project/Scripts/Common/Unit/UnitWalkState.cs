@@ -2,7 +2,8 @@ using UnityEngine;
 
 public abstract class UnitWalkState : IUnitState
 {
-    protected Unit _unit;
+    private Unit _unit;
+    public Unit Unit => _unit;
     protected bool _hasReachedTarget = false;
     
     public UnitWalkState(Unit unit)
@@ -17,12 +18,12 @@ public abstract class UnitWalkState : IUnitState
 
     public virtual void Exit()
     {
-        _unit.SetTarget(_unit.GetBasePosition());
+        Unit.SetTarget(Unit.GetBasePosition());
     }
 
     public virtual void Update()
     {
-        if (!_hasReachedTarget && _unit.Navigator.HasReachedTarget())
+        if (!_hasReachedTarget && Unit.Navigator.HasReachedTarget())
         {
             _hasReachedTarget = true;
             OnReachedTarget();
