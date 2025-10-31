@@ -10,22 +10,22 @@ public class ReturnToBaseState : UnitWalkState
     public override void Enter()
     {
         base.Enter();
-        _unit.SetTarget(_unit.GetBasePosition());
+        Unit.SetTarget(Unit.GetBasePosition());
     }
 
     public override void Update()
     {
         base.Update();
-        if (_unit.GetTargetResource() != null)
+        if (Unit.GetTargetResource() != null)
         {
-            _unit.CarryResource(_unit.GetTargetResource());
+            Unit.CarryResource(Unit.GetTargetResource());
         }
     }
 
     protected override void OnReachedTarget()
     {
-        _unit.DeliveredResource();
+        Unit.DeliveredResource();
         // _unit.SetState(_unit.IdleState);
-        _unit.EnterState<UnitIdleState>();
+        Unit.EnterState<UnitIdleState>();
     }
 }
