@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class ResourceScanner : MonoBehaviour
 {
-    [SerializeField] private Collider _scanCollider;
-
     private ResourceLifecycle _resourceLifecycle;
 
     public void Init(ResourceLifecycle resourceLifecycle)

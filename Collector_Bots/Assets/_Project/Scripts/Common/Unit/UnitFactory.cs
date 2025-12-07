@@ -20,7 +20,7 @@ public class UnitFactory : MonoBehaviour
     
     public Unit FactoryMethod()
     {
-        var unit = GameObject.Instantiate(_unitPrefab);
+        var unit = GameObject.Instantiate(_unitPrefab, _unitPrefab.GetBasePosition(), Quaternion.Euler(0, 0, 0));
         unit.Init();
         return unit;
     }

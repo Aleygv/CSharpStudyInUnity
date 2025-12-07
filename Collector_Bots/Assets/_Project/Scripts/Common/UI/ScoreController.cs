@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class ScoreController : MonoBehaviour
@@ -6,6 +7,8 @@ public class ScoreController : MonoBehaviour
 
     private int _score;
 
+    public event Action<int> OnResourceDelivered;
+    
     private void Awake()
     {
         // Инициализируем отображение при старте
@@ -16,6 +19,13 @@ public class ScoreController : MonoBehaviour
     public void AddPoints(int points)
     {
         _score += points;
+        _scoreView?.SetScore(_score);
+        OnResourceDelivered?.Invoke(_score);
+    }
+
+    public void SubtractPoint(int points)
+    {
+        _score -= points;
         _scoreView?.SetScore(_score);
     }
 
