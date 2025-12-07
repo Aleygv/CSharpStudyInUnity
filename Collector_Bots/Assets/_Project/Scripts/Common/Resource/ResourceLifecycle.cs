@@ -14,8 +14,8 @@ public class ResourceLifecycle : MonoBehaviour
     private Random _random;
     private ObjectPool<Resource> _pool;
     private List<Resource> _activeResources;
-    private float _currentTime;
     private ScoreController _scoreController;
+    private float _currentTime;
     
     public void Init(Random random, ObjectPool<Resource> res, ScoreController scoreController)
     {
@@ -37,6 +37,11 @@ public class ResourceLifecycle : MonoBehaviour
             _pool.ReleaseItem(resource);
             _scoreController.AddPoints(POINT_FOR_COLLECT);
         }
+    }
+
+    public void RemovePoints(int points)
+    {
+        _scoreController.SubtractPoint(points);
     }
 
     private Transform GetRandomPosition()
@@ -65,5 +70,10 @@ public class ResourceLifecycle : MonoBehaviour
         }
     }
 
+    public int GetScore()
+    {
+        return _scoreController.GetScore();
+    }
+    
     public IReadOnlyList<Resource> GetActiveResources() => _activeResources;
 }

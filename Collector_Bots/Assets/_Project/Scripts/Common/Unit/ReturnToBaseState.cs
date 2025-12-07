@@ -25,6 +25,7 @@ public class ReturnToBaseState : UnitWalkState
     protected override void OnReachedTarget()
     {
         Unit.DeliveredResource();
+        Unit.MarkAsBusy(false);
         // _unit.SetState(_unit.IdleState);
         Unit.EnterState<UnitIdleState>();
     }

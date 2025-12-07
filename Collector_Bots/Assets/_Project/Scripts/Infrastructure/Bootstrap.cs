@@ -11,6 +11,8 @@ public class Bootstrap : MonoBehaviour
     [SerializeField] private Base _base;
     [SerializeField] private ResourceScanner _scanner;
     [SerializeField] private ScoreController _scoreController;
+    [SerializeField] private BaseView _baseView;
+    // [SerializeField] private FlagController _flagController;
     
     // private List<Unit> _units;
     private Random _random;
@@ -27,11 +29,13 @@ public class Bootstrap : MonoBehaviour
         
         _resourceLifecycle.Init(_random, _resources, _scoreController);
         _scanner.Init(_resourceLifecycle);
-        _base.Init(_resourceLifecycle, _factory, _scanner);
+        _baseView.Init();
+        _base.Init(_factory, _scanner, _baseView, _scoreController);
 
         _deliveredHandler = new ResourceDeliveredHandler();
         _deliveredHandler.Init(_resourceLifecycle);
         _base.OnResourceDelivered += _deliveredHandler.OnResourceDeliveryHandler;
+        // _flagController.Init();
     }
 
     private void Activate(Resource resource)

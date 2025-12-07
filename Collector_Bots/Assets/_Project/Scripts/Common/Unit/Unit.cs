@@ -6,19 +6,15 @@ public class Unit : MonoBehaviour
 {
     [SerializeField] private Transform _baseTransform;
     [SerializeField] private Transform _resourceCarryingPoint;
+    [SerializeField] private PathNavigator _navigator;
 
     private Resource _targetResource;
     private IUnitState _currentState;
     private bool _isBusy = false;
     private Dictionary<Type, IUnitState> _states;
 
-    [SerializeField] private PathNavigator _navigator;
     public PathNavigator Navigator => _navigator;
     public bool IsBusy => _isBusy;
-    
-    // public UnitIdleState IdleState { get; private set; }
-    // private GetResourceState GetResourceState { get; set; }
-    // public ReturnToBaseState ReturnState { get; private set; }
     public event Action<Resource> OnResourceDelivered;
     
     public void Init()
@@ -44,6 +40,13 @@ public class Unit : MonoBehaviour
     {
         _currentState?.Exit();
         _currentState = _states[typeof(T)];
+        _currentState?.Enter();
+    }
+
+    public void EnterBuildState(Base originBase, Vector3 buildPosition)
+    {
+        _currentState?.Exit();
+        _currentState = new UnitBuildBaseState(this, _baseTransform.GetComponent<Base>(), buildPosition);
         _currentState?.Enter();
     }
 

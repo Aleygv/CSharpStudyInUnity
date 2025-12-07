@@ -18,7 +18,7 @@ public abstract class UnitWalkState : IUnitState
 
     public virtual void Exit()
     {
-        Unit.SetTarget(Unit.GetBasePosition());
+        // Unit.SetTarget(Unit.GetBasePosition());
     }
 
     public virtual void Update()
