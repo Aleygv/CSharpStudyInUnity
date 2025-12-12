@@ -4,10 +4,10 @@ using UnityEngine;
 
 public class Unit : MonoBehaviour
 {
-    [SerializeField] private Transform _baseTransform;
     [SerializeField] private Transform _resourceCarryingPoint;
     [SerializeField] private PathNavigator _navigator;
 
+    private Vector3 _basePosition;
     private Resource _targetResource;
     private IUnitState _currentState;
     private bool _isBusy = false;
@@ -46,7 +46,7 @@ public class Unit : MonoBehaviour
     public void EnterBuildState(Base originBase, Vector3 buildPosition)
     {
         _currentState?.Exit();
-        _currentState = new UnitBuildBaseState(this, _baseTransform.GetComponent<Base>(), buildPosition);
+        _currentState = new UnitBuildBaseState(this, originBase, buildPosition);
         _currentState?.Enter();
     }
 
@@ -80,9 +80,14 @@ public class Unit : MonoBehaviour
         //resource.transform.SetParent(_resourceCarryingPoint, worldPositionStays: true);
     }
 
+    public void SetBasePosition(Vector3 position)
+    {
+        _basePosition = position;
+    }
+    
     public Vector3 GetBasePosition()
     {
-        return _baseTransform.position;
+        return _basePosition;
     }
     
     public void DeliveredResource()

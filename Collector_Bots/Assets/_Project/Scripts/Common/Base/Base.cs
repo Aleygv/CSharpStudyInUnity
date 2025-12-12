@@ -9,12 +9,10 @@ public class Base : MonoBehaviour
     private const float TIME_PER_ASSIGN = 2.5f;
     private const int UNIT_PRICE = 3;
 
-    // [SerializeField] private BaseIdleState _idleState;
-    // [SerializeField] private BaseScanningState _scanningState;
     [SerializeField] private int _quantityOfUnits;
     [SerializeField] private GameObject _flagPrefab;
-    [SerializeField] private GameObject _basePrefab;
 
+    private BaseFactory _baseFactory;
     private List<Unit> _units;
     private UnitFactory _factory;
     private ResourceScanner _scanner;
@@ -23,25 +21,29 @@ public class Base : MonoBehaviour
     private Dictionary<Type, IBaseState> _states;
     private IBaseState _currentState;
     private ScoreController _scoreController;
-    
+    private ResourceDeliveredHandler _deliveredHandler;
+
     private float _currentTime;
     private bool _isCreateOver = true;
     private bool _isBuildingNewBase = false;
-    
+
     public int ResourcesForNewBase { get; set; }
-    
+
     public event Action<Resource> OnResourceDelivered;
     public event Action<bool> OnCanBuildUnit;
     public event Action<float> OnBuildUnit;
 
-    public void Init(UnitFactory factory, ResourceScanner scanner, BaseView baseView, ScoreController scoreController)
+    public void Init(UnitFactory factory, ResourceScanner scanner, ScoreController scoreController,
+        BaseFactory baseFactory, ResourceDeliveredHandler deliveredHandler)
     {
         _factory = factory;
         _scanner = scanner;
-        _baseView = baseView;
+        _baseView = GetComponentInChildren<BaseView>();
         _scoreController = scoreController;
         _units = new List<Unit>();
-        
+        _baseFactory = baseFactory;
+        _deliveredHandler = deliveredHandler;
+
         _states = new Dictionary<Type, IBaseState>();
         _states.Add(typeof(BaseIdleState), new BaseIdleState(this));
         _states.Add(typeof(BaseBuildingState), new BaseBuildingState(this));
@@ -52,19 +54,26 @@ public class Base : MonoBehaviour
     {
         for (int i = 0; i < _quantityOfUnits; i++)
         {
-            var unit = _factory.FactoryMethod();
+            if (_factory == null) Debug.LogError("Factory is NULL!2");
+            var unit = _factory.FactoryMethod(transform.position);
             _units.Add(unit);
             unit.OnResourceDelivered += HandleResourceDelivered;
         }
 
+        SetPositionForUnits();
+
         _scoreController.OnResourceDelivered += OnResourcesUpdated;
         OnCanBuildUnit += _baseView.SetButtonActive;
         OnBuildUnit += _baseView.SetTimerCreateUnit;
-        
-        _flagInstance = Instantiate(_flagPrefab);
-        _flagInstance.GetComponent<FlagController>().Init(Camera.main);
-        _flagInstance.transform.position = gameObject.transform.position;
-        _flagInstance.GetComponent<FlagController>().OnFlagHasNewPosition += OnFlagPlaced;
+        OnResourceDelivered += _deliveredHandler.OnResourceDeliveryHandler;
+
+        if (FindObjectsByType<FlagController>(FindObjectsSortMode.None).Length == 0)
+        {
+            _flagInstance = Instantiate(_flagPrefab);
+            _flagInstance.GetComponent<FlagController>().Init(Camera.main);
+            _flagInstance.transform.position = gameObject.transform.position;
+            _flagInstance.GetComponent<FlagController>().OnFlagHasNewPosition += OnFlagPlaced;
+        }
     }
 
     private void Update()
@@ -81,7 +90,6 @@ public class Base : MonoBehaviour
             if (ResourcesForNewBase >= 5)
             {
                 _isBuildingNewBase = true;
-                SendUnitToFlag();
             }
         }
         else
@@ -91,7 +99,7 @@ public class Base : MonoBehaviour
         }
     }
 
-    private void SendUnitToFlag()
+    public void SendUnitToFlag()
     {
         foreach (Unit unit in _units)
         {
@@ -99,17 +107,16 @@ public class Base : MonoBehaviour
             {
                 unit.MarkAsBusy(true);
                 unit.EnterBuildState(this, _flagInstance.transform.position);
-                return;
             }
+
+            break;
         }
     }
 
-    public void OnUnitArrivedToBuildBase(Unit unit, Vector3 position)
+    public void OnUnitArrivedToBuildBase(Unit unit)
     {
-        GameObject newBaseObj = Instantiate(_basePrefab, position, Quaternion.identity);
-        Base newBase = newBaseObj.GetComponent<Base>();
-        
-        newBase.Init(_factory, _scanner, _baseView, _scoreController);
+        Base newBase = _baseFactory.FactoryMethod(_flagInstance.transform.position);
+
         newBase.AddUnit(unit);
         _units.Remove(unit);
         Destroy(_flagInstance);
@@ -117,7 +124,7 @@ public class Base : MonoBehaviour
         _isBuildingNewBase = false;
         EnterState<BaseIdleState>();
     }
-    
+
     public void AddUnit(Unit unit)
     {
         _units.Add(unit);
@@ -134,7 +141,7 @@ public class Base : MonoBehaviour
     private IEnumerator CreateUnitAfterDelay()
     {
         yield return new WaitForSeconds(10);
-        var unit = _factory.FactoryMethod();
+        var unit = _factory.FactoryMethod(transform.position);
         _units.Add(unit);
         unit.OnResourceDelivered += HandleResourceDelivered;
         _isCreateOver = true;
@@ -150,9 +157,16 @@ public class Base : MonoBehaviour
         }
     }
 
-    public void OnFlagPlaced()
+    public void OnFlagPlaced(bool canPlaced)
     {
-        EnterState<BaseBuildingState>();
+        if (canPlaced)
+        {
+            EnterState<BaseBuildingState>();
+        }
+        else
+        {
+            EnterState<BaseIdleState>();
+        }
     }
 
     public void AssignTask()
@@ -171,21 +185,32 @@ public class Base : MonoBehaviour
         }
     }
 
+    private void SetPositionForUnits()
+    {
+        foreach (Unit unit in _units)
+        {
+            unit.SetBasePosition(transform.position);
+        }
+    }
+
     private void HandleResourceDelivered(Resource resource)
     {
         OnResourceDelivered?.Invoke(resource);
         AssignTask();
     }
 
-    public void EnterState<T>() where T : IBaseState
+    private void EnterState<T>() where T : IBaseState
     {
         _currentState?.Exit();
         _currentState = _states[typeof(T)];
         _currentState?.Enter();
     }
-    
+
     private void OnMouseDown()
     {
-        _flagInstance.GetComponent<FlagController>().OnMouseDownOnBase();
+        if (_flagInstance != null)
+        {
+            _flagInstance.GetComponent<FlagController>().OnMouseDownOnBase();
+        }
     }
 }

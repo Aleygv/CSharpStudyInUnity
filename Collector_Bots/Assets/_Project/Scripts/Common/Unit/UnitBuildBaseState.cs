@@ -20,6 +20,6 @@ public class UnitBuildBaseState : UnitWalkState
 
     protected override void OnReachedTarget()
     {
-        _originBase.OnUnitArrivedToBuildBase(Unit, _buildPosition);
+        _originBase.OnUnitArrivedToBuildBase(Unit);
     }
 }

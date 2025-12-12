@@ -1,8 +1,8 @@
 using UnityEngine;
 
-public class ResourceDeliveredHandler
+public class ResourceDeliveredHandler : MonoBehaviour
 {
-    private ResourceLifecycle _resourceLifecycle;
+    [SerializeField] private ResourceLifecycle _resourceLifecycle;
 
     public void Init(ResourceLifecycle resourceLifecycle)
     {
