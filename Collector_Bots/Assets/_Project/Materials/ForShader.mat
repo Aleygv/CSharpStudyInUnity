@@ -51,8 +51,8 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
-        m_Texture: {fileID: 2800000, guid: 3c7125b6b209b5d46ae0d90814b8438d, type: 3}
-        m_Scale: {x: 1, y: 1}
+        m_Texture: {fileID: 2800000, guid: c145f629c47fc7444b860975fa26256b, type: 3}
+        m_Scale: {x: 0.62, y: 0.52}
         m_Offset: {x: 0, y: 0}
     - _MetallicGlossMap:
         m_Texture: {fileID: 0}
@@ -94,7 +94,7 @@ Material:
     - _ClearCoatSmoothness: 0
     - _Cull: 2
     - _Cutoff: 0.5
-    - _Density: 72.1
+    - _Density: 43.7
     - _DetailAlbedoMapScale: 1
     - _DetailNormalMapScale: 1
     - _DistortionRate: 27.7
@@ -113,23 +113,25 @@ Material:
     - _QueueOffset: 0
     - _ReceiveShadows: 1
     - _RotationSpeed: 6.15
+    - _ScrollSpeed: 0.1
     - _Smoothness: 0
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
-    - _Speed: 0.1
+    - _Speed: 2.02
     - _SrcBlend: 1
     - _SrcBlendAlpha: 1
     - _Surface: 0
     - _TileSize: 0.499
     - _Trail: 1
     - _TrailLength: 0.477
+    - _TrailStrength: 5
     - _Transparency: 1
     - _UVSec: 0
     - _WorkflowMode: 1
     - _ZWrite: 1
     m_Colors:
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
-    - _Color: {r: 1, g: 1, b: 1, a: 1}
+    - _Color: {r: 0, g: 0.9711666, b: 0.990566, a: 1}
     - _DistortionColor: {r: 0, g: 1, b: 0.8202615, a: 0}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _MainColor: {r: 0, g: 0.9, b: 1, a: 1}

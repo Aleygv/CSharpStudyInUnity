@@ -14,7 +14,7 @@ public class FlagController : MonoBehaviour
     private bool _isDragging = false;
     private float _mZCoord;
 
-    public event Action OnFlagHasNewPosition;
+    public event Action<bool> OnFlagHasNewPosition;
 
     public void Init(Camera mainCamera)
     {
@@ -36,11 +36,12 @@ public class FlagController : MonoBehaviour
         if (_mapBounds.Contains(point))
         {
             Debug.Log("На карте");
-            OnFlagHasNewPosition?.Invoke();
+            OnFlagHasNewPosition?.Invoke(true);
             _isDragging = false;
         }
         else
         {
+            OnFlagHasNewPosition?.Invoke(false);
             transform.position = _initialPosition;
             _isDragging = false;
             Debug.Log("Вне карты");

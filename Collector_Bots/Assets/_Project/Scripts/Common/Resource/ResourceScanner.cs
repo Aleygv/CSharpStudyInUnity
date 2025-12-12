@@ -10,11 +10,6 @@ public class ResourceScanner : MonoBehaviour
     {
         _resourceLifecycle = resourceLifecycle;
     }
-
-    public IReadOnlyList<Resource> FindAllAvailableResources()
-    {
-        return _resourceLifecycle.GetActiveResources();
-    }
     
     public Resource FindNearest(Vector3 position)
     {

@@ -12,15 +12,22 @@ public class BaseBuildingState : IBaseState
     public void Enter()
     {
         _base.ResourcesForNewBase = 0;
-        _base.AssignTask();
     }
 
     public void Exit()
     {
-        _base.EnterState<BaseIdleState>();
+        // _base.EnterState<BaseIdleState>();
     }
 
     public void Update()
     {
+        if (_base.ResourcesForNewBase < 5)
+        {
+            _base.OrganizeAppearance();
+        }
+        else
+        {
+            _base.SendUnitToFlag();
+        }
     }
 }

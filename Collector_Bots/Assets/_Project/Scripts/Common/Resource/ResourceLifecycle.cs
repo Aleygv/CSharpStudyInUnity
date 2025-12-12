@@ -39,11 +39,6 @@ public class ResourceLifecycle : MonoBehaviour
         }
     }
 
-    public void RemovePoints(int points)
-    {
-        _scoreController.SubtractPoint(points);
-    }
-
     private Transform GetRandomPosition()
     {
         int randomValue = _random.Next(0, _resourcePoint.Count);
@@ -68,11 +63,6 @@ public class ResourceLifecycle : MonoBehaviour
                 _currentTime = 0f;
             }
         }
-    }
-
-    public int GetScore()
-    {
-        return _scoreController.GetScore();
     }
     
     public IReadOnlyList<Resource> GetActiveResources() => _activeResources;
